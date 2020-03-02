@@ -1,0 +1,74 @@
+/* Exercise 3.2 */
+/* Could return Nil or an exception */
+def tail[A](as: List[A]): List[A] = {
+  as match {
+    case head::tail => tail
+    case _ => Nil
+  }
+}
+
+/* Exercise 3.3 */
+def setHead[A](value:A, as: List[A]): List[A] = {
+  as match {
+    case head::tail => value::tail
+    case _ => Nil
+  }
+}
+
+/* Exercise 3.4 */
+def drop[A](lst: List[A], n: Int): List[A] = {
+  if (n <= 0) lst
+  else lst match {
+    case head::tail => drop(tail, n-1)
+    case _ => Nil
+  }
+}
+
+/* Exercise 3.5 */
+def dropWhile[A](lst: List[A]) (f: A => Boolean): List[A] = {
+  lst match {
+    case head::tail if f(head) => dropWhile(tail)(f)
+    case _ => lst
+  }
+}
+
+/* Exercise 3.8 */
+def foldRight[A,B](as: List[A], z:B)(f: (A,B) => B): B = {
+  as match {
+    case Nil => z
+    case head::tail => f(head, foldRight(tail, z)(f))
+  }
+}
+// Returns the initial List. The fold right is going to replace the Z parameter
+foldRight(List(1,2,3,4), Nil: List[Int])(_::_)
+
+/* Exercise 3.9 */
+def length[A](lst: List[A]): Int = {
+  foldRight(lst,0)((x,y) => y+1)
+}
+
+/* Exercise 3.10 */
+def foldLeft[A,B](lst: List[A], z: B)(f: (B,A) => B): B = {
+  lst match {
+    case Nil => z
+    case head::tail => foldLeft(tail, f(z, head))(f)
+  }
+}
+
+/* Exercise 3.11 */
+def sumFoldLeft(lst: List[Int]): Int = {
+  foldLeft(lst, 0)(_+_)
+}
+def productFoldLeft(lst: List[Int]): Double = {
+  foldLeft(lst,1.0)((x,y) => x*y)
+}
+def lengthFoldLeft[A](lst: List[A]): Int = {
+  foldLeft(lst,0)((x,y) => x + 1)
+}
+
+
+val a1 = List(1,2,3,4,5)
+foldLeft(a1,1)((x,y) => x*y)
+sumFoldLeft(a1)
+productFoldLeft(a1)
+lengthFoldLeft(a1)
